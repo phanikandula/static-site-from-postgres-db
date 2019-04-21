@@ -1,3 +1,4 @@
+import os
 from fabric import task
 from models import *
 
@@ -13,6 +14,11 @@ def dev_add_state(c, state, capital):
 	print('Got state={0}, capital={1}'.format(state, capital))
 	s = Usa.create(state_name=state, capital_name=capital)
 	print('Added to DB.')
+
+@task
+def dev_trigger_build(c):
+	c.run('curl -X POST -d {} ' + os.environ['DEMO_DB_BUILD_TRIGGER_URL'])
+	print('Build on Netlify triggered')
 
 template= '''
 <html>
